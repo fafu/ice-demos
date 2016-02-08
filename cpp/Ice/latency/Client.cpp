@@ -1,10 +1,13 @@
 // **********************************************************************
 //
 // Copyright (c) 2003-2015 ZeroC, Inc. All rights reserved.
+// changed by Fafu for Bluetooth Connection
 //
 // **********************************************************************
 
 #include <Ice/Ice.h>
+#include <IceUtil/UUID.h>
+#include <IceBT/ConnectionInfo.h>
 #include <Latency.h>
 
 using namespace std;
@@ -36,8 +39,15 @@ LatencyClient::run(int argc, char* argv[])
         cerr << appName() << ": too many arguments" << endl;
         return EXIT_FAILURE;
     }
+    
+    cout << "Please provide the BT server address purely in this form: 01:AB:23:4A:01:92" << endl;
+    String addr;
+    cin >> addr;
 
-    PingPrx ping = PingPrx::checkedCast(communicator()->propertyToProxy("Ping.Proxy"));
+    PingPrx ping = PingPrx::uncheckedCast(
+        communicator()->stringToProxy(
+            "peer:bt -a \"" + addr + "\" -u 6a193943-1754-4869-8d0a-ddc5f9a2b294"));
+    //old checkedCast(communicator()->propertyToProxy("Ping.Proxy"));
     if(!ping)
     {
         cerr << argv[0] << ": invalid proxy" << endl;
