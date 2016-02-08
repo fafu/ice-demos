@@ -37,7 +37,17 @@ LatencyClient::run(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    PingPrx ping = PingPrx::checkedCast(communicator()->propertyToProxy("Ping.Proxy"));
+    PingPrx ping = cout << "Please provide the BT server address purely in this form: 01:AB:23:4A:01:92" << endl;
+    String addr;
+    cin >> addr;
+
+    PingPrx ping = PingPrx::uncheckedCast(
+        communicator()->stringToProxy(
+            "peer:bt -a \"" + addr + "\" -u 6a193943-1754-4869-8d0a-ddc5f9a2b294"));
+    
+    
+    
+    //PingPrx::checkedCast(communicator()->propertyToProxy("Ping.Proxy"));
     if(!ping)
     {
         cerr << argv[0] << ": invalid proxy" << endl;
